@@ -1,0 +1,104 @@
+def _export(self, *args, **kwargs):
+    try:
+        # ... existing code ...
+        
+        torch.onnx.export(
+            self,  # model being exported
+            # Other arguments like dummy inputs, export path, etc.
+            # ...
+        )
+        
+        # ... existing code ...
+    except Exception as e:
+        # ... error handling ...
+        raise e
+
+
+
+
+
+        def _export(self, *args, **kwargs):
+    try:
+        # Get export path
+        export_path = kwargs.pop("export_path", None)
+        if export_path is None:
+            export_path = os.path.join(os.getcwd(), f"{self.__class__.__name__}.onnx")
+        
+        # Set model to eval mode
+        self.eval()
+        
+        # Create simplified dummy inputs
+        batch_size = kwargs.pop("batch_size", 1)
+        seq_length = kwargs.pop("seq_length", 128)
+        
+        # Basic inputs
+        input_ids = torch.ones(batch_size, seq_length, dtype=torch.long)
+        attention_mask = torch.ones(batch_size, seq_length, dtype=torch.long)
+        
+        # Try with simplified arguments
+        torch.onnx.export(
+            self,
+            (input_ids, attention_mask),  # Simplified tuple of inputs
+            export_path,
+            input_names=["input_ids", "attention_mask"],
+            output_names=["output"],
+            dynamic_axes={
+                "input_ids": {0: "batch_size", 1: "sequence_length"},
+                "attention_mask": {0: "batch_size", 1: "sequence_length"},
+                "output": {0: "batch_size", 1: "sequence_length"}
+            },
+            opset_version=kwargs.pop("opset_version", 13),  # Try a lower opset version
+            do_constant_folding=True,
+        )
+        
+        return export_path
+    except Exception as e:
+        print(f"Error during ONNX export: {str(e)}")
+        raise e
+
+
+
+
+
+        def _export(self, *args, **kwargs):
+    try:
+        # ... existing code ...
+        
+        print(f"PyTorch version: {torch.__version__}")
+        print(f"Model type: {type(self)}")
+        print(f"Export arguments: {kwargs}")
+        
+        # ... rest of the export code ...
+    except Exception as e:
+        print(f"Error during ONNX export: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise e
+
+
+        def _export(self, *args, **kwargs):
+    try:
+        # ... existing code setup ...
+        
+        # First trace the model
+        traced_model = torch.jit.trace(
+            self, 
+            (input_ids, attention_mask)
+        )
+        
+        # Then export the traced model
+        torch.onnx.export(
+            traced_model,
+            (input_ids, attention_mask),
+            export_path,
+            # ... other export arguments ...
+        )
+        
+        return export_path
+    except Exception as e:
+        # ... error handling ...
+
+
+
+
+        

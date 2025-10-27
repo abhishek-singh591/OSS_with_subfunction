@@ -402,6 +402,32 @@ def eager_attention_forward(
     attn_output = attn_output.transpose(1, 2).contiguous()
     return attn_output, attn_weights
 
+# def eager_attention_forward(
+#     module: nn.Module,
+#     query: torch.Tensor,
+#     key: torch.Tensor,
+#     value: torch.Tensor,
+#     attention_mask: Optional[torch.Tensor],
+#     scaling: float,
+#     dropout: float = 0.0,
+#     **kwargs,
+# ):
+#     key_states = repeat_kv(key, module.num_key_value_groups)
+#     value_states = repeat_kv(value, module.num_key_value_groups)
+
+#     attn_weights = torch.matmul(query, key_states.transpose(2, 3)) * scaling
+#     if attention_mask is not None:
+#         attn_weights = torch.where(
+#             attention_mask, torch.tensor(MIN_MASKED_ATTENTION_VALUE, dtype=torch.float32), attn_weights
+#         )
+
+#     # Clamp max values to prevent overflow in BF16/FP16
+#     attn_weights = attn_weights - attn_weights.max(dim=-1, keepdim=True).values
+#     probs = F.softmax(attn_weights, dim=-1, dtype=attn_weights.dtype)
+#     attn_weights = nn.functional.dropout(probs, p=dropout, training=module.training)
+#     attn_output = torch.matmul(attn_weights, value_states)
+#     attn_output = attn_output.transpose(1, 2).contiguous()
+#     return attn_output, attn_weights
 
 class QEffGptOssAttention(GptOssAttention):
     """Multi-headed attention from 'Attention Is All You Need' paper"""

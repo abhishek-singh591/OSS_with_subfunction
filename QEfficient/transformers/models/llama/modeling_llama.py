@@ -119,7 +119,6 @@ def eager_attention_forward(
 
     return attn_output, attn_weights
 
-
 class QEffLlamaAttention(LlamaAttention):
     """Multi-headed attention from 'Attention Is All You Need' paper"""
 
