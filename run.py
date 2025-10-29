@@ -84,7 +84,7 @@ onnx_model_path = qeff_model.export()
 # ort_tokens = api_runner.run_kv_model_on_ort(onnx_model_path, is_tlm=False)
 
 qpc_path = qeff_model.compile(
-    prefill_seq_len=Constants.PROMPT_LEN,
+    prefill_seq_len=1,
     ctx_len=Constants.CTX_LEN,
     num_cores=16,
     mxfp6_matmul=False,
@@ -98,7 +98,6 @@ qpc_path = qeff_model.compile(
 streamer = TextStreamer(tokenizer)
 exec_info = qeff_model.generate(
     tokenizer,
-    streamer=streamer,
     prompts=Constants.INPUT_STR,
     device_ids=[0, 1, 2, 3],
 )

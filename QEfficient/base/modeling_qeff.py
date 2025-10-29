@@ -253,22 +253,6 @@ class QEFFBaseModel(ABC):
             decoder_layer_classes = get_decoder_layer_classes_for_export(self.model)
             export_kwargs = {} if export_kwargs is None else export_kwargs
             
-            # def sanitize_decoder_layer_for_onnx(module):
-            #     """Remove or simplify attributes that ONNX export cannot handle."""
-            #     unsafe_attrs = ["config", "experts", "router", "cache", "past_key_values", "sliding_window"]
-            #     for attr in unsafe_attrs:
-            #         if hasattr(module, attr):
-            #             try:
-            #                 setattr(module, attr, None)
-            #             except Exception:
-            #                 pass
-            
-            # # Sanitize *only* the decoder layers
-            # for m in self.model.modules():
-            #     if m.__class__ in decoder_layer_classes:
-            #         sanitize_decoder_layer_for_onnx(m)
-
-            # import pdb; pdb.set_trace()
             torch.onnx.export(
                 self.model,
                 (example_inputs,),
@@ -285,9 +269,8 @@ class QEFFBaseModel(ABC):
             logger.info("PyTorch export successful")
 
             _ = self._offload_model_weights(offload_pt_weights)
-
-            rename_function_outputs(tmp_onnx_path, output_names)
             model = onnx.load(tmp_onnx_path, load_external_data=False)
+            model,transformed = rename_function_outputs(model)
             transform_kwargs = {
                 "onnx_base_dir": str(tmp_onnx_dir),
                 "temp_onnx_path": tmp_onnx_path,

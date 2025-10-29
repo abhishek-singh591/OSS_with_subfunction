@@ -12,6 +12,7 @@ import QEfficient.utils.model_registery  # noqa: F401
 from QEfficient.utils import custom_format_warning
 from QEfficient.utils.logging_utils import logger
 
+from QEfficient.utils.patches import apply_torch_patches, is_patched
 # For faster downloads via hf_transfer
 # This code is put above import statements as this needs to be executed before
 # hf_transfer is imported (will happen on line 15 via leading imports)
@@ -21,6 +22,9 @@ os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
 # custom warning for the better logging experience
 warnings.formatwarning = custom_format_warning
 
+# Apply patches
+# TODO: Find a better way to do this, this is temp. fix.
+apply_torch_patches()
 
 def check_qaic_sdk():
     """Check if QAIC SDK is installed"""
@@ -69,6 +73,8 @@ if check_qaic_sdk():
         "QEFFAutoModelForImageTextToText",
         "QEFFAutoModelForSpeechSeq2Seq",
         "QEFFCommonLoader",
+        "apply_torch_patches",
+        "is_patched",
     ]
 
 else:

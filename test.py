@@ -3,7 +3,7 @@ from transformers import AutoTokenizer
 from QEfficient import QEFFAutoModelForCausalLM
 import torch
 # Initialize the model using from_pretrained similar to transformers.AutoModelForCausalLM
-model_name = "Qwen/Qwen3-30B-A3B-Instruct-2507"
+model_name = "meta-llama/Llama-3.2-1B"
 # model_name="GPT2"
 # model_name="Qwen/Qwen2-1.5B-Instruct"
 import time
@@ -14,6 +14,7 @@ model=QEFFAutoModelForCausalLM.from_pretrained(model_name)
 # print("torch.compile run for model.model")
 # print("time ",t2-t1)
 # print("done")
+# import pdb; pdb.set_trace()
 inputs="Help me with this"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 # tokens=tokenizer([input], return_tensors="pt")

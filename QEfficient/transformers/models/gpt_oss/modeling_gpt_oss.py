@@ -171,7 +171,7 @@ class QEffGptOssMLP(GptOssMLP):
         up = torch.bmm(expert_in, up_proj) + up_proj_bias.unsqueeze(1)
 
         # Apply activation with clamping
-        gate = gate.clamp(min=None, max=self.experts.limit)
+        gate = gate.clamp(min=-self.experts.limit, max=self.experts.limit)
         up = up.clamp(min=-self.experts.limit, max=self.experts.limit)
 
         # GLU activation
